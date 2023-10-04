@@ -12,20 +12,12 @@ public class Frogger {
     private int position;
     
     // Field for task 2. Anything to add/change?
-    private final Records records;
-    private String firstName, lastName, phoneNumber, zipCode, state, gender;
+    private final FroggerID froggerID;
 
-    public Frogger(Road road, int position, Records records, String firstName, String lastName, String phoneNumber,
-    String zipCode, String state, String gender) {
+    public Frogger(Road road, int position, FroggerID froggerID) {
         this.road = road;
         this.position = position;
-        this.records = records;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.phoneNumber = phoneNumber;
-        this.zipCode = zipCode;
-        this.state = state;
-        this.gender = gender;
+        this.froggerID = froggerID;
     }
 
     /**
@@ -36,7 +28,7 @@ public class Frogger {
      */
     public boolean move(boolean forward) {
         int nextPosition = this.position + (forward ? 1 : -1);
-        if (!isValid(nextPosition) || isOccupied(nextPosition)) {
+        if (!road.isValidPosition(nextPosition) || road.isPositionOccupied(nextPosition)) {
             return false;
         }
         this.position = nextPosition;
@@ -44,24 +36,15 @@ public class Frogger {
     }
 
     // TODO: Do you notice any issues here?
-    public boolean isOccupied(int position) {
-        boolean[] occupied = this.road.getOccupied();
-        return occupied[position];
-    }
-    
-    public boolean isValid(int position) {
-        if (position < 0) return false;
-        boolean[] occupied = this.road.getOccupied();
-        return position < occupied.length;
-    }
+    // Move isValid, isOccupied to Road.java in case of leaking private array.
 
     /**
      * Records Frogger to the list of records.
      * 
      * @return true if record successful, else false.
      */
-    public boolean recordMyself() {
-      boolean success = records.addRecord(firstName, lastName, phoneNumber, zipCode, state, gender);
+    public boolean recordMyself(Records records) {
+      boolean success = records.addRecord(froggerID);
       return success;
     }
 
